@@ -1,3 +1,11 @@
+'''This is the very first script that needs to be run run to prepare the project directory in order to arrange the data properly
+the project structure goes as this
+data:
+    images:contain raw images captured from a source
+    labels:will contain annotations file after processing through labelme or any desired tool
+documents:contain project explanation diagrams,requirement package lists ,log dirs, performance graphs etc
+scripts:contains the python files required for project'''
+
 import os
 root='face_detection_pipeline_end_to_end'
 

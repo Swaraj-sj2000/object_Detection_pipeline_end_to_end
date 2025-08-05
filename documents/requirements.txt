@@ -1,0 +1,8 @@
+#pip install -r requirements.txt
+numpy
+uuid
+labelme
+tensorflow
+opencv-python
+matplotlib
+albumentations

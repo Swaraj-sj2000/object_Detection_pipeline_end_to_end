@@ -17,19 +17,30 @@ augmentor = alb.Compose([
     label_fields=['class_labels'] ))
 
 for partition in ['train', 'test', 'val']:
+    print(f"{partition} images aug:...")
     for image in os.listdir(os.path.join('data', partition, 'images')):
+        print(f"{image} ")
         img = cv2.imread(os.path.join('data', partition, 'images', image))
-        coords = [0] * 4
+        
         label_path = os.path.join('data', partition, 'labels', f"{image.split('.')[0]}.json")
+        coords = [0] * 4
 
         if os.path.exists(label_path):
             with open(label_path, 'r') as f:
                 label = json.load(f)
-            coords = np.array(label['shapes'][0]['points']).flatten()
-            coords = coords / np.array([640, 480, 640, 480])
+
+            points = np.array(label['shapes'][0]['points'])
+            x_min = min(points[0][0], points[1][0]) / 640
+            y_min = min(points[0][1], points[1][1]) / 480
+            x_max = max(points[0][0], points[1][0]) / 640
+            y_max = max(points[0][1], points[1][1]) / 480
+
+            coords = [x_min, y_min, x_max, y_max]
+
 
         try:
             for x in range(120):
+                print(x)
                 augmented = augmentor(image=img, bboxes=[coords], class_labels=['face'])
 
                 cv2.imwrite(
@@ -38,6 +49,7 @@ for partition in ['train', 'test', 'val']:
                 )
 
                 annotation = {'image': image}
+
                 if os.path.exists(label_path):
                     if len(augmented['bboxes']) == 0:
                         annotation['bbox'] = [0] * 4
