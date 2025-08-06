@@ -11,7 +11,7 @@ data_path="/home/swaraj/sj_code/cv_models/data"
 images_path="/home/swaraj/sj_code/cv_models/data/images"
 labels_path="/home/swaraj/sj_code/cv_models/data/labels"
 
-#if the file structure somehow is missing itll create it before capturing images and store it in desired folder as mentioned
+#if the file structure somehow is missing it'll create it before capturing images and store it in desired folder as mentioned
 for path in [data_path,images_path,labels_path]:
     if not os.path.exists(path):
         os.mkdir(path)

@@ -1,0 +1,13 @@
+README.md
+setup.py
+face_detection/__init__.py
+face_detection/config.py
+face_detection/dataset_loader.py
+face_detection/losses.py
+face_detection/model.py
+face_detection/utils.py
+face_detection.egg-info/PKG-INFO
+face_detection.egg-info/SOURCES.txt
+face_detection.egg-info/dependency_links.txt
+face_detection.egg-info/requires.txt
+face_detection.egg-info/top_level.txt

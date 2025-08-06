@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: face_detection
+Version: 0.1
+Summary: This is an end-to-end face detection pipeline
+Author: Swaraj
+Requires-Dist: numpy
+Requires-Dist: labelme
+Requires-Dist: tensorflow
+Requires-Dist: opencv-python
+Requires-Dist: matplotlib
+Requires-Dist: albumentations
+Dynamic: author
+Dynamic: requires-dist
+Dynamic: summary

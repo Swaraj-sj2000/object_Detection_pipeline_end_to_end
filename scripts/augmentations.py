@@ -1,70 +1,83 @@
-import albumentations as alb
+import albumentations as A
 import os
 import json
 import cv2
 import numpy as np
 
-aug_data='aug_data'
+# Directory where augmented data will be saved
+AUG_DATA_DIR = 'aug_data'
+ORIG_DATA_DIR = 'data'
 
-augmentor = alb.Compose([
-    alb.RandomCrop(width=450, height=450, p=1.0), 
-    alb.HorizontalFlip(p=0.5),
-    alb.RandomBrightnessContrast(p=0.2),
-    alb.RandomGamma(p=0.2),
-    alb.RGBShift(p=0.2),
-    alb.VerticalFlip(p=0.5)], 
-    bbox_params=alb.BboxParams(format='albumentations', 
-    label_fields=['class_labels'] ))
+# Define augmentation pipeline
+augmentor = A.Compose([
+    A.RandomCrop(width=450, height=450, p=1.0), 
+    A.HorizontalFlip(p=0.5),
+    A.RandomBrightnessContrast(p=0.2),
+    A.RandomGamma(p=0.2),
+    A.RGBShift(p=0.2),
+    A.VerticalFlip(p=0.5)
+], bbox_params=A.BboxParams(format='albumentations', label_fields=['class_labels']))
 
-for partition in ['train', 'test', 'val']:
-    print(f"{partition} images aug:...")
-    for image in os.listdir(os.path.join('data', partition, 'images')):
-        print(f"{image} ")
-        img = cv2.imread(os.path.join('data', partition, 'images', image))
-        
-        label_path = os.path.join('data', partition, 'labels', f"{image.split('.')[0]}.json")
-        coords = [0] * 4
+def normalize_bbox(points, img_width=640, img_height=480):
+    x_min = min(points[0][0], points[1][0]) / img_width
+    y_min = min(points[0][1], points[1][1]) / img_height
+    x_max = max(points[0][0], points[1][0]) / img_width
+    y_max = max(points[0][1], points[1][1]) / img_height
+    return [x_min, y_min, x_max, y_max]
 
-        if os.path.exists(label_path):
+def augment_partition(partition):
+    print(f"\n[INFO] Augmenting '{partition}' partition...")
+    image_dir = os.path.join(ORIG_DATA_DIR, partition, 'images')
+    label_dir = os.path.join(ORIG_DATA_DIR, partition, 'labels')
+    save_img_dir = os.path.join(AUG_DATA_DIR, partition, 'images')
+    save_lbl_dir = os.path.join(AUG_DATA_DIR, partition, 'labels')
+
+    os.makedirs(save_img_dir, exist_ok=True)
+    os.makedirs(save_lbl_dir, exist_ok=True)
+
+    for image_file in os.listdir(image_dir):
+        img_path = os.path.join(image_dir, image_file)
+        label_path = os.path.join(label_dir, f"{os.path.splitext(image_file)[0]}.json")
+
+        img = cv2.imread(img_path)
+        if img is None:
+            print(f"[WARNING] Could not read image: {image_file}")
+            continue
+
+        coords = [0, 0, 0, 0]
+        has_label = os.path.exists(label_path)
+
+        if has_label:
             with open(label_path, 'r') as f:
                 label = json.load(f)
-
             points = np.array(label['shapes'][0]['points'])
-            x_min = min(points[0][0], points[1][0]) / 640
-            y_min = min(points[0][1], points[1][1]) / 480
-            x_max = max(points[0][0], points[1][0]) / 640
-            y_max = max(points[0][1], points[1][1]) / 480
+            coords = normalize_bbox(points)
 
-            coords = [x_min, y_min, x_max, y_max]
-
-
-        try:
-            for x in range(120):
-                print(x)
+        for i in range(120):
+            try:
                 augmented = augmentor(image=img, bboxes=[coords], class_labels=['face'])
 
-                cv2.imwrite(
-                    os.path.join('aug_data', partition, 'images', f"{image.split('.')[0]}.{x}.jpg"),
-                    augmented['image']
-                )
+                # Save image
+                aug_image_name = f"{os.path.splitext(image_file)[0]}.{i}.jpg"
+                cv2.imwrite(os.path.join(save_img_dir, aug_image_name), augmented['image'])
 
-                annotation = {'image': image}
+                # Save annotation
+                annotation = {
+                    'image': aug_image_name,
+                    'bbox': [0, 0, 0, 0],
+                    'class': 0
+                }
 
-                if os.path.exists(label_path):
-                    if len(augmented['bboxes']) == 0:
-                        annotation['bbox'] = [0] * 4
-                        annotation['class'] = 0
-                    else:
-                        annotation['bbox'] = augmented['bboxes'][0]
-                        annotation['class'] = 1
-                else:
-                    annotation['bbox'] = [0] * 4
-                    annotation['class'] = 0  
+                if has_label and augmented['bboxes']:
+                    annotation['bbox'] = augmented['bboxes'][0]
+                    annotation['class'] = 1
 
-                with open(
-                    os.path.join('aug_data', partition, 'labels', f"{image.split('.')[0]}.{x}.json"), 'w'
-                ) as f:
+                with open(os.path.join(save_lbl_dir, f"{os.path.splitext(image_file)[0]}.{i}.json"), 'w') as f:
                     json.dump(annotation, f)
 
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(f"[ERROR] Failed on {image_file} ({i}): {e}")
+
+if __name__ == "__main__":
+    for part in ['train', 'test', 'val']:
+        augment_partition(part)
