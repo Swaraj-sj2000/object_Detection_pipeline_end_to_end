@@ -70,7 +70,7 @@ FACE_DETECTION_PIPELINE_END_TO_END/
 
 ```
 git clone https://github.com/Swaraj-sj2000/object_Detection_pipeline_end_to_end.git
-`
+
 cd FACE_DETECTION_PIPELINE_END_TO_END
 
 pip install -e .
