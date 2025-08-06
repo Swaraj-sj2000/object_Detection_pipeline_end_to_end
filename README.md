@@ -83,16 +83,24 @@ jupyter notebook
 ```
 
 ### Step 1: Collect and label images using webcam
+```
 python scripts/collect_images.py
+```
 
 ### Step 2: Apply augmentations
+```
 python scripts/augmentaions.py
+```
 
 ### Step 3: Split dataset into train/val/test
+```
 python scripts/train_test_split.py
+```
 
 ### Step 4: Train the model
+```
 python scripts/train.py
+```
 
 
 # Model Overview
