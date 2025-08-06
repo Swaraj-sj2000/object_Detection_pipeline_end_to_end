@@ -142,11 +142,12 @@ All dependencies are listed in:
 
 
 documents/requirements.txt
-```
+
 
 Install with:
 
-```bash
+
+```
 pip install -r documents/requirements.txt
 ```
 
