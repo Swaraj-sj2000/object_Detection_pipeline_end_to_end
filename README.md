@@ -68,8 +68,9 @@ FACE_DETECTION_PIPELINE_END_TO_END/
 ## Installations:
 1.clone the repo
 
+```
 git clone https://github.com/Swaraj-sj2000/object_Detection_pipeline_end_to_end.git
-
+`
 cd FACE_DETECTION_PIPELINE_END_TO_END
 
 pip install -e .
@@ -79,6 +80,7 @@ pip install notebook
 2.Getting Started
 
 jupyter notebook
+```
 
 ### Step 1: Collect and label images using webcam
 python scripts/collect_images.py
@@ -130,7 +132,7 @@ You can modify model.py to improve performance using custom architectures or pre
 
 All dependencies are listed in:
 
-```
+
 documents/requirements.txt
 ```
 
