@@ -4,10 +4,15 @@ It covers data collection, data augmentation, preprocessing, model building, and
 
 # Features
 -Capture and label your own dataset using webcam
+
 -Apply rich augmentations (brightness, contrast, rotation, etc.)
+
 -Preprocess the dataset for training
+
 -Build and train a custom face detection model
+
 -Make predictions on new images
+
 -All functionality packed into a reusable Python package
 
 
@@ -64,8 +69,11 @@ FACE_DETECTION_PIPELINE_END_TO_END/
 1.clone the repo
 
 git clone https://github.com/Swaraj-sj2000/object_Detection_pipeline_end_to_end.git
+
 cd FACE_DETECTION_PIPELINE_END_TO_END
+
 pip install -e .
+
 pip install notebook
 
 2.Getting Started
