@@ -100,12 +100,49 @@ You can modify model.py to improve performance using custom architectures or pre
 
 # Modules Explanations:
 -face_detection/config.py: Configuration and hyperparameters.
+
 -face_detection/dataset_loader.py: Loads the dataset and prepares it for training.
+
 -face_detection/losses.py: Custom loss function used during training.
+
 -face_detection/model.py: Model architecture.
+
 -face_detection/utils.py: Helper functions .
 
 
 
+## Customization
 
+- Plug in your own dataset inside `data/`
+- Adjust augmentation strategies in `scripts/augmentaions.py`
+- Change learning rate, epochs, etc. in `config.py`
+
+---
+
+## Logs and Results
+
+- Training logs, loss graphs, and other results are saved in `documents/logs/`
+- Pipeline architecture diagram is available as `documents/project_explanation_diagram.png`
+
+---
+
+## Requirements
+
+All dependencies are listed in:
+
+```
+documents/requirements.txt
+```
+
+Install with:
+
+```bash
+pip install -r documents/requirements.txt
+```
+
+---
+
+## Author
+
+**Swaraj**  
 
